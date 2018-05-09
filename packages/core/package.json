@@ -1,0 +1,20 @@
+{
+  "name": "@es2/core",
+  "version": "0.10.0",
+  "description": "Some classes for your project",
+  "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Sergey Sova <mail@sergeysova.com> (https://sergeysova.com/)",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "repository": "https://github.com/sergeysova/es2/tree/master/packages/core",
+  "bugs": {
+    "email": "mail@sergeysova.com",
+    "url": "https://github.com/sergeysova/es2/issues"
+  },
+  "homepage": "https://github.com/sergeysova/es2"
+}

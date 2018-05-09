@@ -1,0 +1,29 @@
+{
+  "name": "@es2/lib",
+  "version": "0.10.0",
+  "description": "ES2",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sergeysova/es2.git"
+  },
+  "author": "Sergey Sova <mail@sergeysova.com> (https://sergeysova.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sergeysova/es2/issues"
+  },
+  "homepage": "https://github.com/sergeysova/es2#readme",
+  "devDependencies": {
+    "@atomix/eslint-config": "^6.4.0",
+    "ava": "^0.25.0",
+    "eslint": "^4.19.1",
+    "lerna": "^2.11.0",
+    "nodemon": "^1.17.4"
+  },
+  "dependencies": {
+    "flow-bin": "^0.71.0"
+  }
+}
