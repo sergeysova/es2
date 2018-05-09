@@ -5,18 +5,19 @@ const Enum = ([name]) => (variants) => {
   const $$variant = Symbol(`${name}::variant`)
   const $$values = Symbol(`${name}::values`)
 
+  const variantKeys = Object.keys(variants)
+
   const Class = {}
   const classes = {}
 
   Class.is = function is(target) {
-    return target[$$type] === name
+    return target[$$type] === name || variantKeys.includes(target[$$type])
   }
   Class.prototype = Object.create({
     [$$type]: name,
     match: function match(targetVars) {
       const targetKeys = Object.keys(targetVars)
-      const allKeys = Object.keys(variants)
-      const notCoveredKeys = allKeys.filter((key) => !targetKeys.includes(key))
+      const notCoveredKeys = variantKeys.filter((key) => !targetKeys.includes(key))
 
       if (notCoveredKeys.length > 0 && !targetVars._) {
         throw new TypeError(`non-exhausive patterns: ${notCoveredKeys.join(', ')} not covered `)
