@@ -55,209 +55,216 @@ const { Option, Some, None } = Enum`Option`({
   None: () => { },
 })
 
-Option.prototype.isSome = function Option$isSome() {
-  return this.match({
-    Some: () => true,
-    None: () => false,
-  })
+Option.prototype = {
+
+  isSome: function Option$isSome() {
+    return this.match({
+      Some: () => true,
+      None: () => false,
+    })
+  },
+
+  isNone: function Option$isNone() {
+    return this.match({
+      Some: () => false,
+      None: () => true,
+    })
+  },
+
+  expect: function Option$expect(msg) {
+    return this.match({
+      Some: (val) => val,
+      None: () => {
+        throw new Error(msg)
+      },
+    })
+  },
+
+  unwrap: function Option$unwrap() {
+    return this.match({
+      Some: (val) => val,
+      None: () => {
+        throw new Error('called `Option::unwrap()` on a `None` value')
+      },
+    })
+  },
+
+  unwrapOr: function Option$unwrapOr(def) {
+    return this.match({
+      Some: (val) => val,
+      None: () => def,
+    })
+  },
+
+  unwrapOrElse: function Option$unwrapOrElse(fn) {
+    return this.match({
+      Some: (val) => val,
+      None: () => fn(),
+    })
+  },
+
+  map: function Option$map(mapFn) {
+    return this.match({
+      Some: (val) => Some(mapFn(val)),
+      None,
+    })
+  },
+
+  mapOr: function Option$mapOr(def, mapFn) {
+    return this.match({
+      Some: (val) => mapFn(val),
+      None: () => def,
+    })
+  },
+
+  mapOrElse: function Option$mapOr(defFn, mapFn) {
+    return this.match({
+      Some: (val) => mapFn(val),
+      None: () => defFn(),
+    })
+  },
+
+  and: function Option$and(optb) {
+    return this.match({
+      Some: () => optb,
+      None,
+    })
+  },
+
+  andThen: function Option$andThen(chainFn) {
+    return this.match({
+      Some: (val) => chainFn(val),
+      None,
+    })
+  },
+
+  filter: function Option$filter(predicateFn) {
+    return this.andThen((val) => predicateFn(val) ? Some(val) : None())
+  },
+
+
+  or: function Option$or(optb) {
+    return this.match({
+      Some: () => this,
+      None: () => optb,
+    })
+  },
+
+
+  orElse: function Option$orElse(fn) {
+    return this.match({
+      Some: () => this,
+      None: () => fn(),
+    })
+  },
+
+  okOr: function Option$okOr(err) {
+    return this.match({
+      Some: (val) => Ok(val),
+      None: () => Err(err),
+    })
+  },
+
+  okOrElse: function Option$okOrElse(errFn) {
+    return this.match({
+      Some: (val) => Ok(val),
+      None: () => Err(errFn()),
+    })
+  },
+
 }
-
-Option.prototype.isNone = function Option$isNone() {
-  return this.match({
-    Some: () => false,
-    None: () => true,
-  })
-}
-
-Option.prototype.expect = function Option$expect(msg) {
-  return this.match({
-    Some: (val) => val,
-    None: () => {
-      throw new Error(msg)
-    },
-  })
-}
-
-Option.prototype.unwrap = function Option$unwrap() {
-  return this.match({
-    Some: (val) => val,
-    None: () => {
-      throw new Error('called `Option::unwrap()` on a `None` value')
-    },
-  })
-}
-
-Option.prototype.unwrapOr = function Option$unwrapOr(def) {
-  return this.match({
-    Some: (val) => val,
-    None: () => def,
-  })
-}
-
-Option.prototype.unwrapOrElse = function Option$unwrapOrElse(fn) {
-  return this.match({
-    Some: (val) => val,
-    None: () => fn(),
-  })
-}
-
-Option.prototype.map = function Option$map(mapFn) {
-  return this.match({
-    Some: (val) => Some(mapFn(val)),
-    None,
-  })
-}
-
-Option.prototype.mapOr = function Option$mapOr(def, mapFn) {
-  return this.match({
-    Some: (val) => mapFn(val),
-    None: () => def,
-  })
-}
-
-Option.prototype.mapOrElse = function Option$mapOr(defFn, mapFn) {
-  return this.match({
-    Some: (val) => mapFn(val),
-    None: () => defFn(),
-  })
-}
-
-Option.prototype.and = function Option$and(optb) {
-  return this.match({
-    Some: () => optb,
-    None,
-  })
-}
-
-Option.prototype.andThen = function Option$andThen(chainFn) {
-  return this.match({
-    Some: (val) => chainFn(val),
-    None,
-  })
-}
-
-Option.prototype.filter = function Option$filter(predicateFn) {
-  return this.andThen((val) => predicateFn(val) ? Some(val) : None())
-}
-
-
-Option.prototype.or = function Option$or(optb) {
-  return this.match({
-    Some: () => this,
-    None: () => optb,
-  })
-}
-
-
-Option.prototype.orElse = function Option$orElse(fn) {
-  return this.match({
-    Some: () => this,
-    None: () => fn(),
-  })
-}
-
-Option.prototype.okOr = function Option$okOr(err) {
-  return this.match({
-    Some: (val) => Ok(val),
-    None: () => Err(err),
-  })
-}
-
-Option.prototype.okOrElse = function Option$okOrElse(errFn) {
-  return this.match({
-    Some: (val) => Ok(val),
-    None: () => Err(errFn()),
-  })
-}
-
 
 const { Result, Ok, Err } = Enum`Result`({
   Ok: (val) => [val],
   Err: (err) => [err],
 })
 
-Result.prototype.isOk = function Result$isOk() {
-  return this.match({
-    Ok: () => true,
-    Err: () => false,
-  })
-}
+Result.prototype = {
 
-Result.prototype.isErr = function Result$isErr() {
-  return this.match({
-    Ok: () => false,
-    Err: () => true,
-  })
-}
+  isOk: function Result$isOk() {
+    return this.match({
+      Ok: () => true,
+      Err: () => false,
+    })
+  },
 
-Result.prototype.ok = function Result$ok() {
-  return this.match({
-    Ok: (val) => Some(val),
-    Err: () => None(),
-  })
-}
+  isErr: function Result$isErr() {
+    return this.match({
+      Ok: () => false,
+      Err: () => true,
+    })
+  },
 
-Result.prototype.err = function Result$err() {
-  return this.match({
-    Ok: () => None(),
-    Err: (err) => Some(err),
-  })
-}
+  ok: function Result$ok() {
+    return this.match({
+      Ok: (val) => Some(val),
+      Err: () => None(),
+    })
+  },
 
-Result.prototype.map = function Result$map(mapFn) {
-  return this.match({
-    Ok: (val) => Ok(mapFn(val)),
-    Err,
-  })
-}
+  err: function Result$err() {
+    return this.match({
+      Ok: () => None(),
+      Err: (err) => Some(err),
+    })
+  },
 
-Result.prototype.mapErr = function Result$mapErr(mapErrFn) {
-  return this.match({
-    Ok,
-    Err: (val) => Err(mapErrFn(val)),
-  })
-}
+  map: function Result$map(mapFn) {
+    return this.match({
+      Ok: (val) => Ok(mapFn(val)),
+      Err,
+    })
+  },
 
-Result.prototype.and = function Result$and(resb) {
-  return this.match({
-    Ok: () => resb,
-    Err,
-  })
-}
+  mapErr: function Result$mapErr(mapErrFn) {
+    return this.match({
+      Ok,
+      Err: (val) => Err(mapErrFn(val)),
+    })
+  },
 
-Result.prototype.andThen = function Result$andThen(chainFn) {
-  return this.match({
-    Ok: (val) => chainFn(val),
-    Err,
-  })
-}
+  and: function Result$and(resb) {
+    return this.match({
+      Ok: () => resb,
+      Err,
+    })
+  },
 
-Result.prototype.or = function Result$or(resb) {
-  return this.match({
-    Ok,
-    Err: () => resb,
-  })
-}
+  andThen: function Result$andThen(chainFn) {
+    return this.match({
+      Ok: (val) => chainFn(val),
+      Err,
+    })
+  },
 
-Result.prototype.orElse = function Result$orElse(chainErrFn) {
-  return this.match({
-    Ok,
-    Err: (err) => chainErrFn(err),
-  })
-}
+  or: function Result$or(resb) {
+    return this.match({
+      Ok,
+      Err: () => resb,
+    })
+  },
 
-Result.prototype.unwrapOr = function Result$unwrapOr(optb) {
-  return this.match({
-    Ok: (val) => val,
-    Err: () => optb,
-  })
-}
+  orElse: function Result$orElse(chainErrFn) {
+    return this.match({
+      Ok,
+      Err: (err) => chainErrFn(err),
+    })
+  },
 
-Result.prototype.unwrapOrElse = function Result$unwrapOrElse(opFn) {
-  return this.match({
-    Ok: (val) => val,
-    Err: (err) => opFn(err),
-  })
+  unwrapOr: function Result$unwrapOr(optb) {
+    return this.match({
+      Ok: (val) => val,
+      Err: () => optb,
+    })
+  },
+
+  unwrapOrElse: function Result$unwrapOrElse(opFn) {
+    return this.match({
+      Ok: (val) => val,
+      Err: (err) => opFn(err),
+    })
+  },
+
 }
 
 module.exports = {
